@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="register-page">
+    <div class="container register-layout">
+        <section class="register-panel">
+            <div class="register-head">
+                <span class="eyebrow">CADASTRO</span>
+                <h1>Criar loja digital</h1>
+                <p>Configure sua lanchonete, restaurante ou padaria em minutos.</p>
+            </div>
+
+            <form class="register-form" method="post" action="/register">
+                <div class="form-grid">
+                    <label class="form-field">
+                        <span>Nome da loja</span>
+                        <input type="text" name="name" placeholder="Ex: DCA Burgers" required>
+                    </label>
+
+                    <label class="form-field">
+                        <span>Slug da loja</span>
+                        <input type="text" name="slug" placeholder="dca-burgers">
+                    </label>
+
+                    <label class="form-field">
+                        <span>WhatsApp</span>
+                        <input type="text" name="whatsapp" placeholder="559999999999">
+                    </label>
+
+                    <label class="form-field">
+                        <span>Tipo de negócio</span>
+                        <select name="business_type" required>
+                            {% for key, label in business_types.items() %}
+                            <option value="{{ key }}">{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                </div>
+
+                <div class="register-actions">
+                    <button class="btn btn-primary" type="submit">Criar loja</button>
+                    <a class="btn btn-ghost" href="/">Voltar ao início</a>
+                    <a class="btn btn-whatsapp" href="https://wa.me/5588999999999?text=Quero%20cadastrar%20minha%20loja%20no%20DCA%20Orders" target="_blank" rel="noopener">
+                        <span class="whatsapp-icon">✆</span>
+                        <span>Falar no WhatsApp</span>
+                    </a>
+                </div>
+            </form>
+        </section>
+
+        <aside class="register-preview">
+            <div class="preview-card">
+                <span class="eyebrow">DCA INTELLIGENCE</span>
+                <h2>Previsão de pedidos</h2>
+                <div class="score-row">
+                    <span class="score-label">Sinais de demanda</span>
+                    <span class="score-badge">Alta</span>
+                </div>
+                <div class="score-bars">
+                    <span style="width:84%"></span>
+                    <span style="width:73%"></span>
+                    <span style="width:61%"></span>
+                </div>
+                <div class="intel-list">
+                    <div class="intel-item">
+                        <span>Produtos com tendência</span>
+                        <strong>hambúrgueres</strong>
+                    </div>
+                    <div class="intel-item">
+                        <span>Compra média</span>
+                        <strong>R$ 58,00</strong>
+                    </div>
+                    <div class="intel-item">
+                        <span>Horário de pico</span>
+                        <strong>12h - 14h</strong>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</section>
+{% endblock %}

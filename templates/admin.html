@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="admin-page">
+    <div class="container admin-layout">
+        <aside class="admin-sidebar">
+            <div class="admin-brand">
+                <span class="brand-logo">DCA</span>
+                <span class="brand-text">ORDERS</span>
+            </div>
+            <div class="admin-profile">
+                <span class="admin-label">Estabelecimento</span>
+                <h1>{{ restaurant.name }}</h1>
+                <span class="admin-slug">/{{ restaurant.slug }}</span>
+            </div>
+            <div class="admin-menu">
+                <a class="active" href="#">Dashboard</a>
+                <a href="#">Pedidos</a>
+                <a href="#">Cardápio</a>
+                <a href="#">Relatórios</a>
+            </div>
+        </aside>
+
+        <main class="admin-content">
+            <section class="admin-top">
+                <div>
+                    <span class="eyebrow">DASHBOARD</span>
+                    <h2>Visão geral</h2>
+                </div>
+                <div class="top-actions">
+                    <span class="today-label">Pedidos hoje: <strong>{{ orders|length }}</strong></span>
+                </div>
+            </section>
+
+            <section class="kpi-grid">
+                <article class="kpi-card">
+                    <span class="kpi-label">Pedidos hoje</span>
+                    <span class="kpi-number">{{ orders|length }}</span>
+                </article>
+                <article class="kpi-card">
+                    <span class="kpi-label">Faturamento</span>
+                    <span class="kpi-number">{{ money(intelligence.summary.total_revenue or 0) }}</span>
+                </article>
+                <article class="kpi-card">
+                    <span class="kpi-label">Previsão de demanda</span>
+                    <span class="kpi-number">{{ intelligence.summary.score|round(1) }}%</span>
+                </article>
+            </section>
+
+            <section class="intel-panel">
+                <div class="panel-head">
+                    <h3>Algoritmo DCA Intelligence</h3>
+                    <span class="intel-score">Confiança {{ intelligence.summary.confidence|round(1) }}%</span>
+                </div>
+                <div class="intel-grid">
+                    {% for signal in intelligence.summary.demand %}
+                    <article class="intel-card">
+                        <span class="intel-card-title">{{ signal.name }}</span>
+                        <span class="intel-card-meta">{{ signal.category }}</span>
+                        <span class="intel-card-meta">Qtde: {{ signal.quantity }}</span>
+                        <span class="intel-card-value">{{ money(signal.revenue) }}</span>
+                    </article>
+                    {% else %}
+                    <article class="intel-card empty-intel">
+                        <span class="intel-card-title">Sem pedidos ainda</span>
+                        <span class="intel-card-meta">Cadastre o primeiro produto e inicie o ciclo de demanda.</span>
+                    </article>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="orders-panel">
+                <div class="panel-head">
+                    <h3>Pedidos</h3>
+                </div>
+                <div class="order-list">
+                    {% for order in orders %}
+                    <article class="order-card">
+                        <div class="order-card-head">
+                            <span class="order-number">#{{ order.id }}</span>
+                            <span class="order-customer">{{ order.customer_name }}</span>
+                            <span class="order-total">{{ money(order.total) }}</span>
+                        </div>
+                        <div class="order-details">
+                            <span>{{ order.order_type }}</span>
+                            <span>{{ order.customer_phone or 'Sem WhatsApp' }}</span>
+                            <span>{{ order.payment_method }}</span>
+                        </div>
+                        <div class="order-actions">
+                            <select class="status-select" data-order-id="{{ order.id }}">
+                                {% for status in statuses %}
+                                <option value="{{ status }}" {% if order.status == status %}selected{% endif %}>{{ status_labels[status] }}</option>
+                                {% endfor %}
+                            </select>
+                            <span class="order-status {{ order.status }}">{{ order.status_label }}</span>
+                        </div>
+                    </article>
+                    {% else %}
+                    <article class="empty-orders">
+                        <span>Nenhum pedido ainda.</span>
+                    </article>
+                    {% endfor %}
+                </div>
+            </section>
+        </main>
+    </div>
+</section>
+{% endblock %}

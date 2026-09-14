@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero-grid">
+        <div class="hero-copy">
+            <span class="eyebrow">DCA ORDERS</span>
+            <h1>{{ restaurant.name }}</h1>
+            <p class="hero-text">Seu cardápio digital, pedidos online e WhatsApp integrado em uma experiência premium.</p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="/menu/dca-demo">Ver cardápio</a>
+                <a class="btn btn-ghost" href="/admin">Painel do estabelecimento</a>
+            </div>
+
+            <div class="hero-stats">
+                <div>
+                    <span class="stat-number">24h</span>
+                    <span class="stat-label">Pedidos</span>
+                </div>
+                <div>
+                    <span class="stat-number">R$ 24</span>
+                    <span class="stat-label">Preço médio</span>
+                </div>
+                <div>
+                    <span class="stat-number">WhatsApp</span>
+                    <span class="stat-label">Pedido direto</span>
+                </div>
+            </div>
+        </div>
+
+        <aside class="hero-card">
+            <div class="hero-card-top">
+                <span class="card-kicker">DCA</span>
+                <span class="card-date">ORDERS</span>
+            </div>
+            <div class="demo-menu">
+                <div class="demo-menu-head">
+                    <span>🍔 {{ restaurant.name }}</span>
+                </div>
+                <div class="demo-menu-item">
+                    <span>X-Bacon</span>
+                    <span>{{ money(22.00) }}</span>
+                </div>
+                <div class="demo-menu-item">
+                    <span>Pizza Calabresa</span>
+                    <span>{{ money(45.00) }}</span>
+                </div>
+                <div class="demo-menu-item">
+                    <span>Refrigerante</span>
+                    <span>{{ money(6.00) }}</span>
+                </div>
+            </div>
+            <a class="btn btn-dark full" href="/menu/dca-demo">Fazer pedido</a>
+        </aside>
+    </div>
+</section>
+{% endblock %}

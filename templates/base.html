@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DCA Orders</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Pular para o conteúdo</a>
+
+    <header class="site-header">
+        <div class="container nav">
+            <a class="brand" href="/" aria-label="DCA Orders - página inicial">
+                <span class="brand-logo">DCA</span>
+                <span class="brand-text">ORDERS</span>
+            </a>
+            <nav class="nav-links" aria-label="Navegação principal">
+                <a href="/">Home</a>
+                <a href="/menu/dca-demo">Cardápio</a>
+                <a href="/admin">Admin</a>
+                <a href="/register">Cadastrar loja</a>
+                <a href="/marketplace">Marketplace</a>
+            </nav>
+            <a class="btn btn-whatsapp nav-whatsapp" href="https://wa.me/5588999999999?text=Quero%20falar%20com%20o%20DCA%20Orders" target="_blank" rel="noopener">
+                <span class="whatsapp-icon">✆</span>
+                <span>WhatsApp</span>
+            </a>
+        </div>
+    </header>
+
+    <main id="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <span>DCA Orders</span>
+            <span>Digital Commerce Platform</span>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

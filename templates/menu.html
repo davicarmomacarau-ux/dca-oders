@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="menu-page">
+    <div class="container menu-layout">
+        <aside class="menu-sidebar">
+            <div class="restaurant-card">
+                <span class="restaurant-card-kicker">{{ restaurant.business_type|upper }}</span>
+                <h1>{{ restaurant.name }}</h1>
+                <div class="restaurant-meta">
+                    <span>📍 Entrega e retirada</span>
+                    <span>📞 WhatsApp</span>
+                </div>
+                <div class="restaurant-whatsapp">
+                    <a class="btn btn-whatsapp" href="{{ build_whatsapp_url(restaurant.whatsapp, 'Quero fazer um pedido na loja ' ~ restaurant.name) }}" target="_blank" rel="noopener">
+                        <span class="whatsapp-icon">✆</span>
+                        <span>WhatsApp pedido</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="category-list">
+                {% for category in categories %}
+                <a href="#category-{{ category.id }}" class="category-link">{{ category.name }}</a>
+                {% endfor %}
+            </div>
+
+            <div class="cart-card">
+                <div class="cart-title">🛒 Carrinho</div>
+                <div id="cart-items" class="cart-items">
+                    <span class="cart-empty">Seu carrinho está vazio</span>
+                </div>
+                <div class="cart-total">
+                    <span>Total</span>
+                    <strong id="cart-total">R$ 0,00</strong>
+                </div>
+                <button id="checkout-button" class="btn btn-primary full">Finalizar pedido</button>
+            </div>
+        </aside>
+
+        <main class="menu-content">
+            <section class="menu-header">
+                <div>
+                    <span class="eyebrow">CARDÁPIO</span>
+                    <h2>{{ restaurant.name }}</h2>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="search" placeholder="Buscar produtos...">
+                </div>
+            </section>
+
+            {% for category in categories %}
+            <section class="category-block" id="category-{{ category.id }}">
+                <div class="category-title">
+                    <h3>{{ category.name }}</h3>
+                </div>
+                <div class="product-grid">
+                    {% for product in products if product.category_id == category.id %}
+                    <article class="product-card" data-category="{{ category.name }}" data-name="{{ product.name }}">
+                        <div class="product-info">
+                            <span class="product-category">{{ category.name }}</span>
+                            <h4>{{ product.name }}</h4>
+                            <p>{{ product.description or 'Produto do cardápio.' }}</p>
+                            <div class="product-meta">
+                                <span class="price">{{ money(product.price) }}</span>
+                                <button class="add-button" data-product-id="{{ product.id }}" data-price="{{ product.price }}" data-name="{{ product.name }}">
+                                    Adicionar
+                                </button>
+                            </div>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+            </section>
+            {% endfor %}
+        </main>
+    </div>
+</section>
+
+<section class="modal hidden" id="checkout-modal">
+    <div class="modal-card">
+        <button class="modal-close" id="close-modal">×</button>
+        <div class="modal-head">
+            <span class="eyebrow">Checkout</span>
+            <h3>Finalizar pedido</h3>
+        </div>
+        <form id="checkout-form">
+            <input type="hidden" id="restaurant_id" value="{{ restaurant.id }}">
+            <div class="form-grid">
+                <label>
+                    <span>Nome</span>
+                    <input type="text" id="customer_name" required>
+                </label>
+                <label>
+                    <span>WhatsApp</span>
+                    <input type="text" id="customer_phone" placeholder="(99) 99999-9999">
+                </label>
+                <label>
+                    <span>Tipo</span>
+                    <select id="order_type">
+                        <option value="delivery">Entrega</option>
+                        <option value="pickup">Retirada</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Pagamento</span>
+                    <select id="payment_method">
+                        <option value="pix">Pix</option>
+                        <option value="card">Cartão</option>
+                        <option value="cash">Dinheiro</option>
+                    </select>
+                </label>
+            </div>
+            <label>
+                <span>Endereço</span>
+                <textarea id="address" rows="3" placeholder="Informe seu endereço"></textarea>
+            </label>
+            <label>
+                <span>Observação</span>
+                <textarea id="notes" rows="3" placeholder="Observações do pedido"></textarea>
+            </label>
+            <div class="checkout-summary">
+                <strong id="checkout-total">Total: R$ 0,00</strong>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-ghost" id="cancel-checkout">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Confirmar pedido</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

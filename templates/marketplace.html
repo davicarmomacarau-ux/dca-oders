@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="marketplace-page">
+    <div class="container marketplace-grid">
+        <aside class="market-sidebar">
+            <div class="market-title">
+                <span class="eyebrow">DCA MARKET</span>
+                <h1>Marketplace de campanhas</h1>
+            </div>
+            <div class="market-summary-card">
+                <span class="summary-label">Receita prevista</span>
+                <span class="summary-value">{{ money(6000) }}</span>
+                <span class="summary-sub">mês</span>
+            </div>
+            <div class="market-channels">
+                {% for key, label in channels.items() %}
+                <span class="channel-chip">{{ label }}</span>
+                {% endfor %}
+            </div>
+        </aside>
+
+        <main class="market-main">
+            <section class="market-header">
+                <div>
+                    <span class="eyebrow">PROPAGANDA E GANHO</span>
+                    <h2>Campanhas de demanda</h2>
+                </div>
+                <a class="btn btn-primary" href="#campaign-form">Criar campanha</a>
+            </section>
+
+            <section class="market-kpi">
+                <article class="kpi-card">
+                    <span class="kpi-label">Campanhas ativas</span>
+                    <span class="kpi-number">{{ campaigns|length }}</span>
+                </article>
+                <article class="kpi-card">
+                    <span class="kpi-label">ROI previsto</span>
+                    <span class="kpi-number">+{{ 482 if campaigns else 0 }}%</span>
+                </article>
+                <article class="kpi-card">
+                    <span class="kpi-label">Orçamento</span>
+                    <span class="kpi-number">{{ money(1500) }}</span>
+                </article>
+            </section>
+
+            <section class="campaign-form-card" id="campaign-form">
+                <div class="panel-head">
+                    <h3>Nova campanha</h3>
+                </div>
+                <form class="campaign-form" method="post" action="/marketplace/campaign">
+                    <div class="form-grid">
+                        <label>
+                            <span>Loja</span>
+                            <select name="restaurant_id" required>
+                                {% for restaurant in restaurants %}
+                                <option value="{{ restaurant.id }}">{{ restaurant.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                        <label>
+                            <span>Objetivo</span>
+                            <select name="objective" required>
+                                {% for key, label in objectives.items() %}
+                                <option value="{{ key }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                        <label>
+                            <span>Canal</span>
+                            <select name="channel" required>
+                                {% for key, label in channels.items() %}
+                                <option value="{{ key }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                        <label>
+                            <span>Orçamento</span>
+                            <input type="number" min="50" step="50" name="budget" value="250" required>
+                        </label>
+                        <label class="full-field">
+                            <span>Título da campanha</span>
+                            <input type="text" name="title" placeholder="Combo das 12h" required>
+                        </label>
+                        <label class="full-field">
+                            <span>Público</span>
+                            <input type="text" name="audience" placeholder="Clientes do bairro" required>
+                        </label>
+                        <label class="full-field">
+                            <span>Mensagem</span>
+                            <textarea name="message" rows="4" placeholder="Oferta com WhatsApp e entrega"></textarea>
+                        </label>
+                    </div>
+                    <div class="campaign-actions">
+                        <button type="submit" class="btn btn-primary">Gerar campanha</button>
+                        <button type="reset" class="btn btn-ghost">Limpar</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="offer-form-card">
+                <div class="panel-head">
+                    <h3>Criar oferta por loja</h3>
+                    <span class="live-tag">WhatsApp + Instagram + ROI</span>
+                </div>
+                <form class="offer-form" method="post" action="/marketplace/offer">
+                    <div class="form-grid">
+                        <label>
+                            <span>Loja</span>
+                            <select name="restaurant_id" required>
+                                {% for restaurant in restaurants %}
+                                <option value="{{ restaurant.id }}">{{ restaurant.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                        <label>
+                            <span>Canal</span>
+                            <select name="channel" required>
+                                {% for key, label in channels.items() %}
+                                <option value="{{ key }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                        <label>
+                            <span>Desconto %</span>
+                            <input type="number" min="1" max="60" step="1" name="discount" value="10">
+                        </label>
+                        <label class="full-field">
+                            <span>Título da oferta</span>
+                            <input type="text" name="title" placeholder="Oferta de almoço" required>
+                        </label>
+                        <label class="full-field">
+                            <span>Público alvo</span>
+                            <input type="text" name="audience" placeholder="Clientes próximos ao bairro">
+                        </label>
+                        <label class="full-field">
+                            <span>Mensagem de oferta</span>
+                            <textarea name="message" rows="3" placeholder="Entrega grátis hoje"></textarea>
+                        </label>
+                    </div>
+                    <div class="campaign-actions">
+                        <button type="submit" class="btn btn-primary">Criar oferta</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="forecast-section">
+                <div class="panel-head">
+                    <h3>Previsão por horário e público</h3>
+                </div>
+                <div class="forecast-grid">
+                    {% for hour, score in forecast_by_hour.items() %}
+                    <article class="forecast-card">
+                        <span class="forecast-hour">{{ hour }}</span>
+                        <span class="forecast-score">{{ score }}%</span>
+                    </article>
+                    {% endfor %}
+                </div>
+                <div class="forecast-grid">
+                    {% for audience, score in forecast_by_audience.items() %}
+                    <article class="forecast-card audience-card">
+                        <span class="forecast-hour">{{ audience }}</span>
+                        <span class="forecast-score">{{ score }}%</span>
+                    </article>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="campaign-list">
+                <div class="panel-head">
+                    <h3>Ranking automático de campanhas</h3>
+                    <span class="status-tag">Melhor ROI</span>
+                </div>
+
+                {% for campaign in campaigns %}
+                <article class="campaign-card">
+                    <div class="campaign-top">
+                        <span class="campaign-title">{{ campaign.title }}</span>
+                        <span class="campaign-channel">{{ channels.get(campaign.channel, campaign.channel) }}</span>
+                    </div>
+                    <div class="campaign-meta">
+                        <span>{{ campaign.restaurant_name }}</span>
+                        <span>{{ campaign.objective }}</span>
+                        <span>{{ campaign.audience }}</span>
+                    </div>
+                    <div class="campaign-lower">
+                        <span class="campaign-budget">{{ money(campaign.budget) }}</span>
+                        <span class="campaign-revenue">Previsto {{ money(campaign.expected_revenue) }}</span>
+                        <span class="campaign-roi">ROI {{ campaign.roi_estimate }}%</span>
+                    </div>
+                </article>
+                {% else %}
+                <article class="empty-campaign">
+                    <span>Nenhuma campanha criada ainda.</span>
+                </article>
+                {% endfor %}
+            </section>
+
+            <section class="offers-list">
+                <div class="panel-head">
+                    <h3>Ofertas por loja</h3>
+                    <span class="status-tag">WhatsApp ready</span>
+                </div>
+                {% for offer in offers %}
+                <article class="offer-card">
+                    <div class="offer-head">
+                        <span class="offer-title">{{ offer.title }}</span>
+                        <span class="offer-channel">{{ channels.get(offer.channel, offer.channel) }}</span>
+                    </div>
+                    <div class="offer-detail">
+                        <span>{{ offer.restaurant_name }}</span>
+                        <span>{{ offer.audience }}</span>
+                        <span>Desconto {{ offer.discount }}%</span>
+                        <span>Score {{ offer.forecast_score }}</span>
+                    </div>
+                    <div class="offer-actions">
+                        <span class="offer-message">{{ offer.message }}</span>
+                        <a class="btn btn-primary small" href="{{ offer.whatsapp_url }}" target="_blank" rel="noopener">Enviar via WhatsApp</a>
+                    </div>
+                </article>
+                {% else %}
+                <article class="empty-offer">
+                    <span>Nenhuma oferta criada ainda.</span>
+                </article>
+                {% endfor %}
+            </section>
+        </main>
+    </div>
+</section>
+{% endblock %}
